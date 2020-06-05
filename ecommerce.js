@@ -4,11 +4,9 @@ let queary=window.matchMedia("(min-width:800px)");
     function sideNavMenu(queary){
         if(queary.matches){
             document.getElementById("topNavLink").style.transform="scale(1,1)";
-            console.log("inside if");
         }
         else{
             document.getElementById("topNavLink").style.transform="scale(1,0)";
-            console.log("inside else area");
             let sideMenuBoolean=false;
             for(let i=0;i<2;i++){
                 document.querySelectorAll("#sideNavMenu")[i].addEventListener("click",()=>{
@@ -29,6 +27,33 @@ let queary=window.matchMedia("(min-width:800px)");
     sideNavMenu(queary);
     queary.addListener(sideNavMenu);
 
+//------------------laptopLowerNav-------------------------------------
+let imageSlider=document.querySelector("#imgContainer");
+        let image=document.querySelectorAll("#imgContainer img");
+        const size=85;
+        var counter=1;
+        document.getElementById("NxtBtn").addEventListener("click",()=>{
+            if(counter>image.length){
+                counter=1;
+                imageSlider.style.transform="translateX("+ size*counter+"px)";
+            }
+            else{
+                imageSlider.style.transform="translateX("+ -size*counter+"px)";
+                counter++;
+            }
+        })
+
+        document.getElementById("previousBtn").addEventListener("click",()=>{
+            if(counter>image.length){
+                counter=1;
+                imageSlider.style.transform="translateX("+ -size*counter+"px)";
+            }
+            else{
+                imageSlider.style.transform="translateX("+ size*counter+"px)";
+                counter++;
+            }
+        })
+
 
 //------------------------------advertise-------------------------------------
 var addImage=["img/kitchen_hbd_rb_24may.jpg","img/7b8e5d1df0df2689.jpg","img/Homegym_hbd_rb_19may.jpg","img/24May_Audio_Store_W_Hero_DC.jpg"];
@@ -39,7 +64,7 @@ function advertisements(){
  if(imageNo>addImage.length-1)
     imageNo=0;
 }
-//setInterval(advertisements,3000);
+setInterval(advertisements,3000);
 //---------------cart--------------------------
 for(let i=0;i<2;i++){
    document.querySelectorAll("#cartImg")[i].addEventListener("click",()=>{
@@ -162,6 +187,7 @@ for(let i=0;i<2;i++){
 
       //------------filter-------------------------------
       let filterFlag=false;
+      let innerBrandFlag=false;
       document.querySelectorAll("#filterImg")[0].addEventListener("click",()=>{
           if(filterFlag==false){
             document.querySelectorAll("#filterItem")[0].style.transform="scale(1,1)"
@@ -171,14 +197,29 @@ for(let i=0;i<2;i++){
             document.querySelectorAll("#filterItem")[0].style.transform="scale(1,0)"
             filterFlag=false;
           }
-
       })
+      document.querySelectorAll("#brandBtn")[0].addEventListener("click",()=>{
+                
+                if(innerBrandFlag==false){
+                    //console.log("inside brand");
+                    document.getElementById("innerBrand").style.display="block";
+                    innerBrandFlag=true;
+                }
+                else if(innerBrandFlag==true){
+                    //console.log("outside brand");
+                    document.getElementById("innerBrand").style.display="none";
+                    innerBrandFlag=false;
+                }
+      })
+
 
       //--------------main search-----------------------------------------------------------
       // document.getElementById("mainSearchBtn").addEventListener("click",()=>{
       //    document.getElementById("searchPage").style.display="block";
       //    document.getElementById("homePage").style.display="none";
       // })
+
+      let filterCount=0;
       
       var allProductList={
          electronics:["tv","smart tv","chimni","washing machine","trimmer","grinder","fridgr"],
@@ -187,17 +228,25 @@ for(let i=0;i<2;i++){
          mobileAndLaptop:["mobile","laptop"],
          homeUtensils:[""]
      }
-
+      
      for(let i=0;i<2;i++){
        document.querySelectorAll("#mainSearchBtn")[i].addEventListener("click",()=>{
 
-         if(this.occupiedSerchPage===true){
-             console.log("inside occupied page");
-             console.log(this.productObjEntries.length);
+        if(filterCount>0 && this.occupiedSerchPage===true){
+            for(let del=0;del<filterCount;del++){
+                console.log("search page delete loop"+del);
+                document.getElementById("searchPage").removeChild(document.getElementById("searchPage").lastElementChild);
+            }
+            filterCount=0;
+         }
+
+         else if(this.occupiedSerchPage===true){
              for(let del=0;del<this.productObjEntries.length;del++){
+                 console.log("search page delete loop"+del);
                  document.getElementById("searchPage").removeChild(document.getElementById("searchPage").lastElementChild);
              }
          }
+          
          this.occupiedSerchPage=false;
          document.getElementById("homePage").style.display="none";
          document.getElementById('searchPage').style.display="block";
@@ -212,7 +261,7 @@ for(let i=0;i<2;i++){
              }
          }
         //console.log(this.requiredSection);
-//----------------------------------------------------SWITCH CASES-----------------------------------------------------------
+//----------------------------------------------------SWITCH CASES
       switch(this.requiredSection){
 
          case "mobileAndLaptop":
@@ -259,19 +308,61 @@ for(let i=0;i<2;i++){
          case "cloth":
                 switch(serchedItem){
                     case "shirt":
+                    this.brandArr=["lp","jp","roadstr","ajio","Arrow","PA","Buff"];
+
+                    for(let i=0;i<this.brandArr.length;i++){    //filter purposeb  
+                        let filterBrandDiv=document.createElement("div");
+                        filterBrandDiv.id="filterBrandDiv"+i;
+                        document.getElementById("innerBrand").appendChild(filterBrandDiv);
+
+                        let filterBrandText=document.createTextNode(this.brandArr[i]);
+                        filterBrandText.id="filterBrandText"+i;
+                        filterBrandDiv.appendChild(filterBrandText);   
+                        
+                        let filterBrandCheckBox=document.createElement("input");
+                        filterBrandCheckBox.type="checkbox";
+                        filterBrandCheckBox.id="filterBrandCheckBox"+i;
+                        filterBrandDiv.appendChild(filterBrandCheckBox); 
+
+                    }
+                    
                     this.productObject={
-                           21:["img/cloth/7xl-eamkc0006-sayesha-original-imaf7aysywz2f9uy.jpeg","this is shirt and only for checking \n purpose we will come to it later","1000"],
-                           22:["img/cloth/38-07082018-partywear-a2-anu06-house-of-sensation-original-imaf98xa262ybypx.jpeg","this is shirt and only for checking purpose we will come to it later","2000"],
-                           23:["img/cloth/m-arhf-gr-base-41-original-imafen82rhxmpsg8.jpeg","","2000"],
-                           24:["img/cloth/m-hlsh010282-highlander-original-imafpchwgwhpezyf.jpeg","","2500"],
-                           25:["img/cloth/xl-oshdnf-bl-ojass-original-imaf9pnwdpwf2eg2.jpeg","","500"],
-                           26:["img/cloth/xxl-cs640501-ghpc-original-imaf96evn5dfyysw.jpeg","","300"],
-                           27:["img/cloth/xxl-tblwtshirtful-sh4-tripr-original-imaf9ajwb3mfbhmh.jpeg","","1200"]
+                           21:["img/cloth/7xl-eamkc0006-sayesha-original-imaf7aysywz2f9uy.jpeg","this is shirt and only for checking \n purpose we will come to it later","1000","Arrow"],
+                           22:["img/cloth/38-07082018-partywear-a2-anu06-house-of-sensation-original-imaf98xa262ybypx.jpeg","this is shirt and only for checking purpose we will come to it later","2000","Buff"],
+                           23:["img/cloth/m-arhf-gr-base-41-original-imafen82rhxmpsg8.jpeg","","2000","jp"],
+                           24:["img/cloth/m-hlsh010282-highlander-original-imafpchwgwhpezyf.jpeg","","2500","lp"],
+                           25:["img/cloth/xl-oshdnf-bl-ojass-original-imaf9pnwdpwf2eg2.jpeg","","500","lp"],
+                           26:["img/cloth/xxl-cs640501-ghpc-original-imaf96evn5dfyysw.jpeg","","300","lp"],
+                           27:["img/cloth/xxl-tblwtshirtful-sh4-tripr-original-imaf9ajwb3mfbhmh.jpeg","","1200","Arrow"]
                          }
                          this.productObjEntries=Object.entries(this.productObject);
                          for(let i=0;i<this.productObjEntries.length;i++){
                              creatDivSrcPage(this.productObjEntries[i][0],this.productObjEntries[i][1][0],this.productObjEntries[i][1][1],this.productObjEntries[i][1][2]);
                          }
+
+                          document.getElementById("filterSearchBtn").addEventListener("click",()=>{ //search button in filter
+
+                            if(this.occupiedSerchPage===true){  //delete recent serched element from search page
+                                for(let del=0;del<this.productObjEntries.length;del++){
+                                    document.getElementById("searchPage").removeChild(document.getElementById("searchPage").lastElementChild);
+                                }
+                            }
+                            this.occupiedSerchPage=false;
+
+                            for(let filterLoop=0;filterLoop<this.brandArr.length;filterLoop++){
+                                if( document.getElementById("filterBrandCheckBox"+filterLoop).checked){ 
+                                    console.log(this.brandArr[filterLoop]);
+                                    for(let i=0;i<this.productObjEntries.length;i++){
+                                        if(this.productObjEntries[i][1][3]==this.brandArr[filterLoop]){
+                                            filterCount++;
+                                            creatDivSrcPage(this.productObjEntries[i][0],this.productObjEntries[i][1][0],this.productObjEntries[i][1][1],this.productObjEntries[i][1][2]);
+                                        }
+                                    }
+                                }
+                            }
+
+                        })
+
                          break;
                      case "jeans":
                      this.productObject={
@@ -438,6 +529,13 @@ for(let i=0;i<2;i++){
          // document.querySelectorAll("#searchedPage p").innerText=itemsFound;
          // console.log(itemsFound);//undefined error checking need to be done
    }
+// ------------------home button in search page-------------------------------
+document.getElementById("searchPageHome").addEventListener("click",()=>{
+      document.getElementById("searchPage").style.display="none";
+      document.getElementById('homePage').style.display="block";
+
+})
+   
 
 
 
